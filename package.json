@@ -31,6 +31,7 @@
     "pg-promise": "^10.5.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "winston": "^3.2.1"
   }
 }

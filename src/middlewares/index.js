@@ -1,5 +1,8 @@
 // import middleware here
+const validateNewUser = require('./authCheck');
+const loginLogger = require('./loginLogger');
 
 module.exports = {
-    // exports middleware here
+    validateNewUser : validateNewUser,
+    loginLogger : loginLogger
 }
