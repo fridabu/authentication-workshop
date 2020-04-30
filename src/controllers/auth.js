@@ -61,6 +61,7 @@ exports.authenticate = (req, res) => {
         res.render('login',{error: err.message});
       }
       if(result == true){
+        res.cookie('access_token', user.username);
         res.redirect('/');
       }else{
         res.render('login',{error: "username or password not corect"});
@@ -75,5 +76,6 @@ exports.authenticate = (req, res) => {
 
 
 exports.logout = (req, res) => {
-  
+  res.clearCookie('access_token');
+  res.redirect('/');
 }

@@ -3,6 +3,7 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 
 const controllers = require('./controllers/index');
 require('dotenv').config();
@@ -24,6 +25,7 @@ app.engine(
   })
 );
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 // cookie-parser here
 app.set('port', process.env.PORT || 3000);
