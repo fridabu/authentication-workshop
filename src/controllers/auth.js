@@ -1,6 +1,7 @@
-// use these functions to manipulate our database
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+// use these functions to manipulate our database
 const { findByUsername, addNewUser } = require('../models/users/User.model');
 
 exports.loginPage = (req, res) => {
@@ -61,8 +62,15 @@ exports.authenticate = (req, res) => {
         res.render('login',{error: err.message});
       }
       if(result == true){
-        res.cookie('access_token', user.username);
-        res.redirect('/');
+        jwt.sign(user.username, process.env.JWT_SECRET, function(err, token) {
+          if (err) {
+            res.render('login',{error: err.message});
+          }
+          console.log(token)
+          res.cookie('access_token', token);
+          res.redirect('/');
+        });
+     
       }else{
         res.render('login',{error: "username or password not corect"});
       }
