@@ -1,11 +1,13 @@
 // use these functions to manipulate our database
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const { findByUsername, addNewUser } = require('../models/users/User.model');
 
 exports.loginPage = (req, res) => {
   res.render('login', { activePage: { login: true } });
 };
 exports.registerPage = (req, res) => {
-  res.render('register', { activePage: { register: true } });
+  res.render('register', { activePage: { register: true }, error:'' });
 };
 
 // This function handles the POST /addUser route
@@ -14,6 +16,30 @@ exports.registerPage = (req, res) => {
 // hash the password, then add the new user to our database using the v addNewUser method
 // make sure to handle any error that might occured
 exports.addUser = (req, res, err) => {
+  var username = req.body.username;
+  var password = req.body.password;
+  var confirmPassword = req.body.confirmPassword;
+  if(username.length == 0 || password.length == 0 || confirmPassword.length ==0){
+    res.render('register', { error: 'one of the fields is empty'});
+    return;
+  }
+  if(password !== confirmPassword){
+    //return new Error('Passwords not match');
+    res.render('register', { error: 'Passwords not match'});
+    return;
+  }
+  bcrypt.hash(password, saltRounds, function(err, hash) {
+    if(err){
+    res.render('register', { error: 'error in hashing'});
+    return;
+    }
+    // Store hash in your password DB.
+    addNewUser(username,hash).then ( () => {
+      res.redirect('/');
+    }).catch((e)=>{
+      res.render('register',{error: e.message});
+    });
+});
   
 };
 
